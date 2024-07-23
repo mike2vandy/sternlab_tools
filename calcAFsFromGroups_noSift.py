@@ -9,12 +9,10 @@ import vcf
 
 def reduceCSQ(csqs):
     #columns: variant,consequence,impact,gene,transcriptID,biotype,exon,hgvsc,hgvsp,cDNA_pos,cds_pos,aa_pos,aas,codons,variant_class,proteinID
-    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 21, 24, 25, 27, 28, 30]
+    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 21, 30]
     updated = []
     for record in csqs:
         record = record.split('|')
-        if '&' in record[-1]:
-            record[-1] = "&".join(sorted(set(record[-1].split('&')), key=record[-1].split('&').index))
         result = ','.join([record[i] for i in mainCols])
         updated.append(result)
     
