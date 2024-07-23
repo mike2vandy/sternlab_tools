@@ -5,7 +5,7 @@ import sys, vcf
 #best for dog snv vcf from WAGS
 def reduceCSQ(csqs):
     #columns: variant,consequence,impact,gene,transcriptID,biotype,exon,hgvsc,hgvsp,cDNA_pos,cds_pos,aa_pos,aas,codons,variant_class,proteinID
-    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 21, 30]
+    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 19, 21, 30]
     updated = []
     for record in csqs:
         record = record.split('|')
@@ -23,8 +23,7 @@ sampleNames = vcfR.samples
 header = (
   "chrm,pos,ref,alt,filter,AF,allele,"
   "Consequence,IMPACT,Gene,Feature_type,Feature,BIOTYPE,EXON,INTRON,cDNA_position,"
-  "CDS_position,Protein_position,Amino_acids,Codons,VARIANT_CLASS,"
-  "protein_id,"
+  "CDS_position,Protein_position,Amino_acids,Codons,STRAND,VARIANT_CLASS,protein_id,"
   f"{','.join(sampleNames)}")
 
 print(header)
