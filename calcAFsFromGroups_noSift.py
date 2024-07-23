@@ -9,7 +9,7 @@ import vcf
 
 def reduceCSQ(csqs):
     #columns: variant,consequence,impact,gene,transcriptID,biotype,exon,hgvsc,hgvsp,cDNA_pos,cds_pos,aa_pos,aas,codons,variant_class,proteinID
-    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 21, 30]
+    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 19, 21, 30]
     updated = []
     for record in csqs:
         record = record.split('|')
@@ -59,8 +59,7 @@ def createHeader(sortedGroups):
   
     end = (
     "Allele,Consequence,IMPACT,Gene,Feature_type,Feature,BIOTYPE,EXON,INTRON,cDNA_position,"
-    "CDS_position,Protein_position,Amino_acids,Codons,DISTANCE,STRAND,VARIANT_CLASS,"
-    "ENSP,SOURCE,SIFT_pred,SIFT_score,PhyloP_score"
+    "CDS_position,Protein_position,Amino_acids,Codons,STRAND,VARIANT_CLASS,protein_id"
     )
   
     header = f"{first},{middle},{end}"
