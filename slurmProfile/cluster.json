@@ -1,0 +1,22 @@
+{
+    "select_variants_chrom" :
+    {
+        "output" : ".logs/%j.{rule}.out",
+        "error"  : ".logs/%j.{rule}.err"
+    },
+    "process_variants" :
+    {
+        "output" : ".logs/%j.{rule}.out",
+        "error"  : ".logs/%j.{rule}.err"
+    },
+    "concat_files" :
+    {
+        "output" : ".logs/%j.{rule}.out",
+        "error"  : ".logs/%j.{rule}.err"
+    },
+    "remove_intergenic" :
+    {
+        "output" : ".logs/%j.{rule}.out",
+        "error"  : ".logs/%j.{rule}.err"
+    }
+}
