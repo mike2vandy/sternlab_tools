@@ -1,23 +1,16 @@
 #! /usr/bin/env python
 
 from cyvcf2 import VCF
-import sys
-import os
-import argparse
+import sys, os, argparse
 
 def reduceCSQ(csqs, csq_indices):
   if isinstance(csqs, str):
     csqs = csqs.split(',')
+
   updated = []
   for conseq in csqs:
     record = conseq.split('|')
-    new_record = []
-    for i in record:
-      if '&' in i:
-        new_record.append(i.split('&')[0])
-      else:
-        new_record.append(i)
-    result = ','.join([new_record[i] for i in csq_indices])
+    result = ','.join([record[i] for i in csq_indices])
     updated.append(result)
 
   return updated
@@ -40,10 +33,7 @@ def calcAF(genos, minor_alt):
   hom_var = 0
   missing = 0
   for i in genos:
-    if len(i) == 3:
-      first, second, phased = i
-    else:
-      first = second = i[0]
+    first, second, phased = i
     if first != -1 and second != -1:
       alleles.append(first)
       alleles.append(second)
@@ -55,7 +45,6 @@ def calcAF(genos, minor_alt):
         hom_var += 1
     else:
       missing += 1
-
   try:
     refAF = alleles.count(0) / len(alleles)
     if minor_alt:
@@ -123,18 +112,19 @@ def main():
   vcf_file = VCF(vcf)
   vcf_samples = vcf_file.samples
   
-  #get these main fields from csq 
+  
+  #get main fields from csq 
   des_to_get = ['Allele', 'Consequence', 'IMPACT', 'Gene', 'Feature_type', 'Feature', 'BIOTYPE', 'EXON', 'INTRON',
-                'cDNA_position','CDS_position', 'Protein_position', 'Amino_acids', 'Codons', 'VARIANT_CLASS', 'ENSP', 'PhyloP_score',
-                'SIFT_SIFT_SCORE','SIFT_SIFT_PREDICTION']
-    
-  #get indices for CSQ descriptions
+                'cDNA_position','CDS_position', 'Protein_position', 'Amino_acids', 'Codons', 'VARIANT_CLASS', 'ENSP']
+  
+  
+  #get indices f
   csq_indices = extract_csq_indices(vcf_file, des_to_get)
   
-  #creae and add samples to groups based on the list they're in
+  #creae and add samples to groups based on which list they're in
   sortedGroups, samples = createGroupsFromLists(list_dir)
   
-  #create and print the header
+  #creat the header
   print(createHeader(sortedGroups, des_to_get))
   
   #parse through VCF
@@ -158,7 +148,7 @@ def main():
     var_geno = dict(zip(vcf_samples, record.genotypes))
     for sample, gt in var_geno.items():
       group_lists['all'].append(gt)
-      group_lists[samples.get(sample, "")].append(gt) if samples.get(sample) is not None else None
+      group_lists[samples.get(sample, "")].append(gt) 
     groupAFs = {g: calcAF(gts, minor_alt) for g, gts in group_lists.items()}
     afs_str = ','.join([groupAFs[i] for i in sortedGroups])
     csq = reduceCSQ(record.INFO.get('CSQ', []), csq_indices)

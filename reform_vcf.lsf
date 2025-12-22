@@ -1,0 +1,33 @@
+#!/bin/bash -l
+#BSUB -W 8:00
+#BSUB -n 1
+#BSUB -R span[hosts=1]
+#BSUB -R rusage[mem=40GB]
+#BSUB -J annoVcf
+#BSUB -o anno.out
+#BSUB -e anno.err
+
+
+find -exec touch {} \;
+
+#conda activate hts
+
+#bcftools annotate --threads 12 -x "INFO/CSQ"  hcm_138_cats.vep.anno.vcf.gz \
+#	| bcftools norm --threads 12 -f ref/GCF_018350175.1_F.catus_Fca126_mat1.0_genomic.fna -m - \
+#	| bcftools norm --threads 12 -d exact \
+#        | bcftools filter --threads 12 -e 'FORMAT/DP < 4 | FORMAT/GQ < 20' --set-GTs . \
+#	| bcftools filter --threads 12 -s noPass -g 3 -G 10 -e 'MQ < 40 | QD < 2 | FS > 60 | MQRankSum < -12.4 | ReadPosRankSum < -8.0 |SOR > 3' \
+#	| bcftools view --threads 12 -i "AC>0" \
+#        | bcftools +fill-tags --threads 12 -Oz -o hcm_138.filter.vcf.gz
+
+#tabix hcm_138.filter.vcf.gz
+
+#module load apptainer 
+#conda activate snakemake
+
+#snakemake -s gather_and_vep.smk \
+#	--use-singularity \
+#	--configfile felcat126_config.yaml \
+#	--profile lsf.go_wags \
+#	--keep-going \
+#	--rerun-incomplete

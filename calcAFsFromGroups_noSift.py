@@ -15,7 +15,6 @@ def reduceCSQ(csqs):
         record = record.split('|')
         result = ','.join([record[i] for i in mainCols])
         updated.append(result)
-    
     return(updated)
 
 def calcAF(groupList, minor_alt):
@@ -83,6 +82,7 @@ sortedGroups.sort()
 print(createHeader(sortedGroups))
 
 #process vcf
+
 vcfR = vcf.Reader(filename = sys.argv[1])
 for line in vcfR:
     chrm, pos, ref, alt = line.CHROM, line.POS, line.REF, '/'.join(map(str, line.ALT))
@@ -101,7 +101,7 @@ for line in vcfR:
     first = ','.join(map(str, [chrm, pos, filt, ref, alt, major, minor, minor_alt]))
     group_lists = {group: [] for group in groups}
     for i in line.samples:
-        sample, gt = i.sample, i['GT'].replace('|', '/') 
+        sample, gt = i.sample, i['GT'].replace('|', '/')
         group_lists['all'].append(gt)
         group = os.path.basename(dogs.get(sample, "")) if dogs.get(sample) is not None else None
         if group in group_lists:

@@ -5,7 +5,7 @@ import sys, vcf
 #best for dog snv vcf from WAGS
 def reduceCSQ(csqs):
     #columns: variant,consequence,impact,gene,transcriptID,biotype,exon,hgvsc,hgvsp,cDNA_pos,cds_pos,aa_pos,aas,codons,variant_class,proteinID
-    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 19, 21, 30]
+    mainCols = [0, 1, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 19, 21]
     updated = []
     for record in csqs:
         record = record.split('|')
@@ -42,4 +42,4 @@ for record in vcfR:
     dogs.append(gt)
   csq = reduceCSQ(info.get('CSQ', [])) 
   for consequence in csq:
-    print(f"{chrm},{pos},{ref},{alt},{filt},{AF},{consequence},{','.join(dogs)}") 
+    print(f"{chrm},{pos},{ref},{alt},{filt},{AF},{consequence},{','.join(dogs)}")

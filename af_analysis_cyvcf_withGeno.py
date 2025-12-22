@@ -12,7 +12,13 @@ def reduceCSQ(csqs, csq_indices):
   updated = []
   for conseq in csqs:
     record = conseq.split('|')
-    result = ','.join([record[i] for i in csq_indices])
+    new_record = []
+    for i in record:
+      if '&' in i:
+        new_record.append(i.split('&')[0])
+      else:
+        new_record.append(i)    
+    result = ','.join([new_record[i] for i in csq_indices])
     updated.append(result)
 
   return updated
@@ -86,7 +92,7 @@ def createHeader(sortedGroups, csq_fields, target_sams):
   middle = ','.join(middle)
   end = ','.join(csq_fields)
   sams = ','.join(target_sams)
-  header = f"{first},{middle},{end},{sams},total_minor"
+  header = f"{first},{middle},{end},{sams}"
 
   return header
 
@@ -124,7 +130,7 @@ def main():
   
   vcf = args.vcf
   list_dir = args.dir
-  region = args.region.replace('.',':')
+  region = args.region
   
   #rad vcf 
   vcf_file = VCF(vcf)
@@ -132,15 +138,15 @@ def main():
   
   #get these main fields from csq 
   des_to_get = ['Allele', 'Consequence', 'IMPACT', 'Gene', 'Feature_type', 'Feature', 'BIOTYPE', 'EXON', 'INTRON',
-                'cDNA_position','CDS_position', 'Protein_position', 'Amino_acids', 'Codons', 'VARIANT_CLASS', 'ENSP', 'PhyloP_score']
+                'cDNA_position','CDS_position', 'Protein_position', 'Amino_acids', 'Codons', 'VARIANT_CLASS', 'ENSP', 'PhyloP_score', 'SIFT_SCORE', 'SIFT_PREDICTION']
     
   #get indices for CSQ descriptions
   csq_indices = extract_csq_indices(vcf_file, des_to_get)
   
   #creae and add samples to groups based on the list they're in
   sortedGroups, samples = createGroupsFromLists(list_dir)
-  arry_sams = [i for i in vcf_samples if i in samples and samples[i] == 'shiloh_arth']
-  
+
+  arry_sams = [i for i in vcf_samples if i in samples and samples[i] == 'arrhythmic'] 
   #create and print the header
   print(createHeader(sortedGroups, des_to_get, arry_sams))
   
@@ -166,16 +172,16 @@ def main():
     for sample, gt in var_geno.items():
       group_lists['all'].append(gt)
       group_lists[samples.get(sample, "")].append(gt) if samples.get(sample) is not None else None
-    shi_genos = group_lists['shiloh_arth']
+    shi_genos = group_lists['arrhythmic']
     fixed = fixGenos(shi_genos, minor_alt)
     no_miss = [i for i in fixed if i != -1]
-    total_minor = sum(no_miss)
+    #total_minor = sum(no_miss)
     fixed = ','.join(map(str, fixed))
     groupAFs = {g: calcAF(gts, minor_alt) for g, gts in group_lists.items()} 
     afs_str = ','.join([groupAFs[i] for i in sortedGroups])
     csq = reduceCSQ(record.INFO.get('CSQ', []), csq_indices)
     for cons in csq:
-      print(f"{first},{afs_str},{cons},{fixed},{total_minor}")
+      print(f"{first},{afs_str},{cons},{fixed}")
   
 if __name__ == "__main__":
   main() 
