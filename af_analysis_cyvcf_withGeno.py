@@ -146,7 +146,11 @@ def main():
   #creae and add samples to groups based on the list they're in
   sortedGroups, samples = createGroupsFromLists(list_dir)
 
-  arry_sams = [i for i in vcf_samples if i in samples and samples[i] == 'arrhythmic'] 
+  grp1 = [i for i in vcf_samples if i in samples and samples[i] == 'arrhythmic'] 
+  grp2 = [i for i in vcf_samples if i in samples and samples[i] == 'dcm']
+  grp3 = [i for i in vcf_samples if i in samples and samples[i] == 'healthy']
+  arry_sams = grp1 + grp2 + grp3
+
   #create and print the header
   print(createHeader(sortedGroups, des_to_get, arry_sams))
   
@@ -172,7 +176,7 @@ def main():
     for sample, gt in var_geno.items():
       group_lists['all'].append(gt)
       group_lists[samples.get(sample, "")].append(gt) if samples.get(sample) is not None else None
-    shi_genos = group_lists['arrhythmic']
+    shi_genos = group_lists['arrhythmic'] + group_lists['dcm'] + group_lists['healthy']
     fixed = fixGenos(shi_genos, minor_alt)
     no_miss = [i for i in fixed if i != -1]
     #total_minor = sum(no_miss)
