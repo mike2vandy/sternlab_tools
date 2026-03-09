@@ -18,12 +18,9 @@ def fishers_test(geno1, geno2):
   f_dom_table = [[grp1_hom + grp1_het, grp1_ref],
                  [grp2_hom + grp2_het, grp2_ref]]
   
-  if sum(geno1 + geno2) > 0:
-    f_odds_rec, p_rec = fisher_exact(f_rec_table)
-    f_odds_dom, p_dom = fisher_exact(f_dom_table)
-  else:
-    p_dom, p_rec = 1.0, 1.0
-
+  f_odds_rec, p_rec = fisher_exact(f_rec_table)
+  f_odds_dom, p_dom = fisher_exact(f_dom_table)
+  
   return round(p_rec, 10), round(p_dom, 10)
 
 def reduce_CSQ(csqs, csq_indices):
@@ -58,7 +55,7 @@ def extract_csq_indices(vcf_file, fields):
 def fix_genos(genos, minor_alt, alt_cmd):
 
   new_geno = []
-  if alt_cmd == True:
+  if alt_cmd:
     for i in genos:
       first, second = (i[0], i[0]) if len(i) < 3 else (i[0], i[1])
       new_geno.append(-1 if -1 in (first, second) else
