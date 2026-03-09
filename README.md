@@ -3,6 +3,13 @@
 ## af_analysis.py  
 This script calculates the number of genotypes and allele frequencies for predefined groups and lists the allele count for each sample provided in the format (0,1,2). 0 is homozgous allele 1, 1 is heterozygous, and 2 is homozygous for allele 2. It also outputs VEP categories, has options for SV and SNV files, and calculates Fisher Exact p-values for dominant and recessive MOIs. Output is `stdout` and `csv` delimited. 
 
+#### Dependencies:  
+af_analysis.py requires cyvcf2 and scipy.
+```
+conda create -n vcf_env -c bioconda -c conda-forge cyvcf2 scipy
+conda activate vcf_env
+```
+
 #### Usage:
 ```
 usage: af_analysis.py [-h] -v VCF -d DIR [-r REGION] [-c] [-f GROUP1 GROUP2] [-s] [-a]
