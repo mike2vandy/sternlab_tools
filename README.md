@@ -44,8 +44,42 @@ hcm.count.homref,hcm.count.het,hcm.count.homvar,hcm.count.nocal,hcm.minor_af
 `-c` is exploratory. It shows what VEP CSQ categories are in the VCF file (if present) and any missing categories the script is looking for.  
 `-r` can be used exploring a specific range within the  vcf, i.e. a specific gene region. The format is chrm:start-stop  
 Allele frequencies and genotypes are by default oriented toward the **minor** allele. Alternatively, `-a` can be used to orient allele frequencies and genotypes toward the alternative allele.  
+
 If calculating allele frequencies on an SV vcf, use `-s`.  
 `-f` Calls the Fisher's Exact test option. It accepts two group names, defined by titles of sample files, space delimited.  
 ```
 af_analysis.py -v file.vcf.gz -d list/ -f hcm control
 ```
+
+## parallel_af.smk
+
+This snakemake wrapper is used to calcualte allele frequencies in a whole genome vcf among regions in parallel. A few preparations are necessary first.  
+It's a little fragile so how I would run this is copy the `parallel_af.smk` and `af_analsis.py` to a new dirctory. 
+Within that directory:  
+create a directory called `env`
+activate the `conda vcf_env` you created above and export that enviornment:  
+```
+conda activate vcf_env
+conda env export > env/vcf_env.yaml
+```
+You'll need to create a regions file with `splitChr.py` in sternlab_tools like:  
+```
+splitChr.py /path/to/genome.fasta.fai > dog_regions.txt
+```
+So your directory structure should look like:
+
+```
+.
+|-- af_anaylsis.py
+|--parallel_af.smk
+|--env/
+   |--vcf_env.yaml
+|lists/
+|   hcm.list
+|   control.list
+|   shelties.list
+|   beagles.list
+```
+
+
+
