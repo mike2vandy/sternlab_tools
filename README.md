@@ -66,20 +66,42 @@ You'll need to create a regions file with `splitChr.py` in sternlab_tools like:
 ```
 splitChr.py /path/to/genome.fasta.fai > dog_regions.txt
 ```
-So your directory structure should look like:
+Your directory structure should look like:
 
 ```
 .
-|-- af_anaylsis.py
-|--parallel_af.smk
-|--env/
-   |--vcf_env.yaml
-|lists/
-|   hcm.list
-|   control.list
-|   shelties.list
-|   beagles.list
+|--|
+   |--af_anaylsis.py
+   |--dog_regions.txt
+   |--parallel_af.smk
+   |--env/
+      |--vcf_env.yaml
+   |--lists/
+      |--hcm.list
+      |--control.list
+      |--shelties.list
 ```
+You'll need to edit the parallel_af.smk rule `process_regions` input to reflect the path of the vcf file of interest, and the shell to include your desired af_analysis.py options.   
+Activate your snakemake environment
+```
+conda activate snakemake
+```
+You have two options to run this:
+1. Run it all one one node with a bunch of cores:
+   ```
+   snakemake -s parallel_af.smk --cores 12 --use-conda
+   ```
+2. Copy  `lsf.go_wags` from a wags run to your working directory and:
+   ```
+   snakemake -s parallel_af.smk --use-conda --profile lsf.go_wags
+   ``` 
+Either line will of course need to be in a lsf submission script, in the first option, you'll need to request 12 cores. In the 2nd option just request 1 core, all jobs are going to be individually submitted and use one processor.  
+**Note**:  
+ncsu compute nodes are not on the internet amd snakemake will try to download the needed packages on the first attempt. Therefore, the first time you run this pipeline, you'll need to run `snakemake -s parallel_af.smk --cores 1 --use-conda` on the head node, wait for the packages to finish installing, and kill the process. Then you can submit a submission script.  
+The final final will be in `output/final`.
+
+
+
 
 
 
